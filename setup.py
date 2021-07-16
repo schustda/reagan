@@ -5,7 +5,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="reagan",
-    version="1.8.2",
+    version="1.8.5",
     description="Package for streamlining credentials, connections, and data flow",
     url="https://github.com/schustda/reagan",
     author="Douglas Schuster",

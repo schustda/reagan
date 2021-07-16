@@ -12,7 +12,7 @@ class Ihub(Subclass):
             "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
         }
 
-    def page_response(self, message_id, timeout = 10):
+    def page_response(self, message_id, timeout = 60):
         '''
         Use the requests and beautifulsoup modules to make the request to the website
         '''
