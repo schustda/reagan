@@ -43,7 +43,6 @@ class DV360(Subclass):
             - all (bool): Whether to make continuous api calls or just a single
         """
 
-        arguments["partnerId"] = self.partner_id
         request = eval(f'self.service.{obj}().list(**arguments)')
         self.api_calls += 1
 
@@ -83,7 +82,6 @@ class DV360(Subclass):
                 (note: partner_id is automatically added)
         """
 
-        arguments["partnerId"] = self.partner_id
         arguments["body"] = body
         request = eval("self.service.{0}().update(**arguments)".format(obj))
         self.api_calls += 1
@@ -98,7 +96,6 @@ class DV360(Subclass):
                 (note: partner_id is automatically added)
         """
 
-        arguments["partnerId"] = self.partner_id
         arguments["body"] = body
         request = eval("self.service.{0}().insert(**arguments)".format(obj))
         self.api_calls += 1
@@ -113,7 +110,6 @@ class DV360(Subclass):
                 (note: partner_id is automatically added)
         """
 
-        arguments["partnerId"] = self.partner_id
         arguments["id"] = id
         try:
             request = eval("self.service.{0}().get(**arguments)".format(obj))
