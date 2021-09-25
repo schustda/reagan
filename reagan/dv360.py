@@ -128,7 +128,6 @@ class DV360(Subclass):
         (note: partner_id is automatically added)
         """
 
-        params["partnerId"] = self.partner_id
         params["body"] = body
         request = eval("self.service.{0}().patch(**params)".format(obj))
         self.api_calls += 1
