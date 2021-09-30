@@ -44,34 +44,7 @@ class DV360(Subclass):
         """
 
         request = eval(f'self.service.{obj}().list(**arguments)')
-        self.api_calls += 1
-
-        output = []
-
-        while True:
-            response = request.execute()
-            self.api_calls += 1
-
-            # Need to re-work this logic below on how to get the key with the data (it's different then than the api object)
-            s = set(response.keys()) - set(["kind", "nextPageToken"])
-            if s:
-                obj_key = (s).pop()
-            else:
-                break
-            data = response[obj_key]
-            output.extend(data)
-
-            if not all:
-                break
-            elif response[obj_key] and response.get("nextPageToken",0) and len(data) == 1000:
-                request = eval("self.service.{0}().list_next(request, response)".format(obj))
-            else:
-                break
-        if 'ids' in arguments:
-            output = self._add_missing(output, arguments)
-
-        self.vprint(f"Complete. Made {self.api_calls} API call(s).")
-        return output
+        return request.execute()
 
     def update(self, obj, body, arguments={}):
         """
@@ -133,7 +106,7 @@ class DV360(Subclass):
         self.api_calls += 1
         return request.execute()
 
-    def to_df(self, obj, arguments={}, columns=None, all=False, dropna=False, method='list'):
+    def to_df(self, obj, arguments={}, columns=None):
         """
         Calls the list method for the DCM Api.
             - obj (string): The api object to pull from
@@ -142,20 +115,27 @@ class DV360(Subclass):
             - columns (list): If datatype is set to df, reduce the
                 dataframe to only return the specified columns
             - all (bool): Whether to make continuous api calls or just a single
-            - dropna (bool): Whether or not the dataframe can contain nulls
             - method (string): Which API endpoint to call. Only supports list and get.
         """
-        if method == 'list':
-            data = self.list(obj=obj, arguments=arguments, all=all)
-        elif method == 'get':
-            obj_id = arguments.pop('id')
-            data = [self.get(obj=obj, id=obj_id, arguments=arguments)]
-        df = self._json_to_df(data, columns)
-        return df
+        next_page_token, first_call = None, True
+        while next_page_token or first_call:
+            first_call = False
+            
+            response = self.list(obj=obj, arguments=arguments)
+
+            s = set(response.keys()) - set(["kind", "nextPageToken"])
+            if s:
+                obj_key = (s).pop()
+            else:
+                break
+            data = response[obj_key]
+            
+            next_page_token = response.get('nextPageToken',None)
+            arguments['pageToken'] = next_page_token
+            
+            yield self._json_to_df(data, columns)
 
 if __name__ == "__main__":
     dv360 = DV360(partner_id = 1982032)
-    a = dv360.to_df(obj='advertisers',columns = ['name'])
-
-    # ss = SQLServer('102')
-    # p = ss.to_list('SELECT Partner_Id FROM dv360.Partner')
+    for df in dv360.to_df('advertisers().creatives',columns = ['creativeId','displayName'],arguments={'advertiserId':'2123140'}):
+        print(df.head())
