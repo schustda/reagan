@@ -1,7 +1,7 @@
 msrest==0.6.11
 pyodbc==4.0.26
 pandas==0.25.3
-numpy==1.16.4
+numpy>=1.16.6
 boto3==1.13.16
 botocore==1.16.16
 smartsheet_python_sdk==2.68.3
