@@ -59,4 +59,4 @@ class Fidelity(Subclass):
         df = df.reset_index(drop=True)
         df.columns = map(lambda x: x.lower(), df.columns)
         df["volume"] = df["volume"].astype(int)
-        return df
+        return self._add_zero_days(df)
