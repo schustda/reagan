@@ -5,8 +5,12 @@ import pandas as pd
 
 class Fidelity(Subclass):
     def __init__(self):
-        super().__init__()
-        self.base_url = self.get_parameter('/fidelity/base_url')
+
+        # super().__init__()
+        # self.base_url = self.get_parameter('/fidelity/base_url')
+        
+        # Swapping to hardcoded to avoid too many boto api calls
+        self.base_url = 'https://screener.fidelity.com/ftgw/etf/downloadCSV.jhtml?symbol='
 
     def _add_zero_days(self, df):
 

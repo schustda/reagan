@@ -7,3 +7,4 @@ from reagan.gcp import GCP
 from reagan.psql import PSQL
 from reagan.ihub import Ihub
 from reagan.dv360 import DV360
+from reagan.fidelity import Fidelity
